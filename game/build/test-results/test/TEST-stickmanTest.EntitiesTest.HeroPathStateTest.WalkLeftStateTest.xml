@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickmanTest.EntitiesTest.HeroPathStateTest.WalkLeftStateTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-11-16T06:08:20" hostname="pengchengdeMacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="handleTestTest" classname="stickmanTest.EntitiesTest.HeroPathStateTest.WalkLeftStateTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

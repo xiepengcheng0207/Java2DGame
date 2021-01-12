@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StandState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.Entities.HeroPathState</a> &gt; <span class="el_source">StandState.java</span></div><h1>StandState.java</h1><pre class="source lang-java linenums">package stickman.Entities.HeroPathState;
+
+public class StandState extends ImagePathState {
+
+<span class="fc" id="L5">    private final String[] imagePathsLookRight = {&quot;ch_stand1.png&quot;, &quot;ch_stand2.png&quot;, &quot;ch_stand3.png&quot;, &quot;ch_stand2.png&quot;};</span>
+<span class="fc" id="L6">    private final String[] imagePathsLookLeft = {&quot;ch_stand4.png&quot;, &quot;ch_stand5.png&quot;, &quot;ch_stand6.png&quot;, &quot;ch_stand5.png&quot;};</span>
+<span class="fc" id="L7">    private boolean isLookingRight = true;</span>
+<span class="fc" id="L8">    private final int LOOKING_LIMIT = 5;</span>
+<span class="fc" id="L9">    private int currentLookingIteration = 0;</span>
+
+    public StandState(double startXPos) {
+<span class="fc" id="L12">        super(startXPos);</span>
+<span class="fc" id="L13">        UPDATE_FREQUENCY_INDEX = 20;</span>
+<span class="fc" id="L14">    }</span>
+
+    @Override
+    public String handle(HeroPathStateContext context, double xpos) {
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">        if (xpos &lt; lastXPos) {</span>
+<span class="nc" id="L19">            context.setState(new WalkLeftState(lastXPos));</span>
+<span class="nc" id="L20">            return context.getPath(xpos);</span>
+        }
+
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if (xpos &gt; lastXPos) {</span>
+<span class="nc" id="L24">            context.setState(new WalkRightState(lastXPos));</span>
+<span class="nc" id="L25">            return context.getPath(xpos);</span>
+        }
+
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (currentFrame &lt; UPDATE_FREQUENCY_INDEX) {</span>
+<span class="fc" id="L29">            currentFrame += 1;</span>
+<span class="fc" id="L30">            return getImage(context);</span>
+        } else {
+<span class="fc" id="L32">            currentFrame = 0;</span>
+        }
+
+        // Look left for a little while, then look right for a little while, and so on.
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (currentLookingIteration &gt; LOOKING_LIMIT) {</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">            if (isLookingRight)</span>
+<span class="fc" id="L38">                isLookingRight = false;</span>
+            else
+<span class="nc" id="L40">                isLookingRight = true;</span>
+
+<span class="fc" id="L42">            currentLookingIteration = 0;</span>
+<span class="fc" id="L43">            currentImageIndex = -1;</span>
+        }
+
+<span class="fc" id="L46">        currentImageIndex = (currentImageIndex + 1) % imagePathsLookLeft.length;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (currentImageIndex == 0) currentLookingIteration += 1;</span>
+<span class="fc" id="L48">        return getImage(context);</span>
+    }
+
+    private String getImage(HeroPathStateContext context) {
+<span class="fc" id="L52">        String dir = context.getCharacter().directory;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (isLookingRight)</span>
+<span class="fc" id="L54">            return dir + imagePathsLookRight[currentImageIndex];</span>
+        else
+<span class="fc" id="L56">            return dir + imagePathsLookLeft[currentImageIndex];</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

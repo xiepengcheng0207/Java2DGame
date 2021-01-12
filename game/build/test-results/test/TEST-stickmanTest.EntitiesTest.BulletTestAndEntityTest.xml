@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickmanTest.EntitiesTest.BulletTestAndEntityTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2020-11-16T06:08:20" hostname="pengchengdeMacBook-Pro.local" time="0.005">
+  <properties/>
+  <testcase name="getLayerTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.001"/>
+  <testcase name="setXVelTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getXVelTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="setYPosTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getYPosTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="intersectsTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getWidthTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="setYVelTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getYVelTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getHeightTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getImagePathTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="setWidthTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.001"/>
+  <testcase name="newInstance" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="setXPosTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="setHeightTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <testcase name="getXPosTest" classname="stickmanTest.EntitiesTest.BulletTestAndEntityTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

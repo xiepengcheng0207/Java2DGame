@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BlockedBackground.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.view</a> &gt; <span class="el_source">BlockedBackground.java</span></div><h1>BlockedBackground.java</h1><pre class="source lang-java linenums">package stickman.view;
+
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import stickman.model.GameEngine;
+
+<span class="fc" id="L8">public class BlockedBackground implements BackgroundDrawer {</span>
+    private Rectangle sky;
+    private Rectangle floor;
+    private Pane pane;
+    private GameEngine model;
+
+    @Override
+    public void draw(GameEngine model, Pane pane) {
+<span class="fc" id="L16">        this.model = model;</span>
+<span class="fc" id="L17">        this.pane = pane;</span>
+
+<span class="fc" id="L19">        double width = pane.getWidth();</span>
+<span class="fc" id="L20">        double height = pane.getHeight();</span>
+<span class="fc" id="L21">        double floorHeight = model.getCurrentLevel().getFloorHeight();</span>
+
+<span class="fc" id="L23">        this.sky = new Rectangle(0, 0, width, floorHeight);</span>
+<span class="fc" id="L24">        sky.setFill(Paint.valueOf(&quot;LIGHTBLUE&quot;));</span>
+<span class="fc" id="L25">        sky.setViewOrder(1000.0);</span>
+
+<span class="fc" id="L27">        this.floor = new Rectangle(0, floorHeight, width, height - floorHeight);</span>
+<span class="fc" id="L28">        floor.setFill(Paint.valueOf(&quot;GREEN&quot;));</span>
+<span class="fc" id="L29">        floor.setViewOrder(1000.0);</span>
+
+<span class="fc" id="L31">        pane.getChildren().addAll(sky, floor);</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public void update(double xViewportOffset, double yViewportOffset) {
+        // do nothing since this is a static bg
+<span class="nc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

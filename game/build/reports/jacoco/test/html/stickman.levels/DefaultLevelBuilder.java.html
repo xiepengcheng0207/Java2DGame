@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultLevelBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.levels</a> &gt; <span class="el_source">DefaultLevelBuilder.java</span></div><h1>DefaultLevelBuilder.java</h1><pre class="source lang-java linenums">package stickman.levels;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import stickman.Entities.*;
+import stickman.Entities.FloorTileFactory.DefaultFloorTileFactory;
+import stickman.Entities.FloorTileFactory.FloorTileFactory;
+import stickman.Entities.HeroPathState.HeroPathStateContext;
+import stickman.view.SkyOnlyBackground;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class DefaultLevelBuilder extends LevelBuilder {
+
+<span class="fc" id="L15">    public DefaultLevelBuilder(JSONObject configuration) {</span>
+<span class="fc" id="L16">        this.configuration = configuration;</span>
+<span class="fc" id="L17">        this.bg_drawer = new SkyOnlyBackground();</span>
+<span class="fc" id="L18">        this.entities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    protected void buildPlatforms() {
+<span class="fc" id="L23">        JSONArray platforms = (JSONArray)configuration.get(&quot;platforms&quot;);</span>
+
+        double x_from;
+        double x_to;
+        int qty;
+        double ypos;
+        double width;
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (int i = 0; i &lt; platforms.size(); i++) {</span>
+<span class="fc" id="L31">            JSONObject group = (JSONObject)platforms.get(i);</span>
+<span class="fc" id="L32">            x_from = ((Double)group.get(&quot;x_from&quot;));</span>
+<span class="fc" id="L33">            x_to = ((Double)group.get(&quot;x_to&quot;));</span>
+<span class="fc" id="L34">            qty = ((Long)group.get(&quot;qty&quot;)).intValue();</span>
+<span class="fc" id="L35">            ypos = ((Double)group.get(&quot;ypos&quot;));</span>
+<span class="fc" id="L36">            width = (x_to - x_from) / qty;</span>
+<span class="fc" id="L37">            Entity platform = new Platform(x_from, ypos, width, 15);</span>
+<span class="fc" id="L38">            buildRow(platform , qty);</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    protected void buildMushroom() {
+<span class="fc" id="L44">        JSONArray mushrooms = (JSONArray)configuration.get(&quot;mushrooms&quot;);</span>
+
+        double x;
+        double y;
+        double w;
+        double h;
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (int i = 0; i &lt; mushrooms.size(); i++) {</span>
+<span class="fc" id="L51">            JSONObject group = (JSONObject) mushrooms.get(i);</span>
+<span class="fc" id="L52">            x = ((Double) group.get(&quot;x&quot;));</span>
+<span class="fc" id="L53">            y = ((Double) group.get(&quot;y&quot;));</span>
+<span class="fc" id="L54">            w = ((Double) group.get(&quot;w&quot;));</span>
+<span class="fc" id="L55">            h = ((Double) group.get(&quot;h&quot;));</span>
+<span class="fc" id="L56">            Entity mushroom = new Mushroom(x, y, w, h);</span>
+<span class="fc" id="L57">            entities.add(mushroom);</span>
+        }
+<span class="fc" id="L59">    }</span>
+
+    @Override
+    protected void buildFlags() {
+<span class="fc" id="L63">        JSONArray flags = (JSONArray)configuration.get(&quot;flags&quot;);</span>
+
+        double x;
+        double y;
+        double w;
+        double h;
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (int i = 0; i &lt; flags.size(); i++) {</span>
+<span class="fc" id="L70">            JSONObject group = (JSONObject) flags.get(i);</span>
+<span class="fc" id="L71">            x = ((Double) group.get(&quot;x&quot;));</span>
+<span class="fc" id="L72">            y = ((Double) group.get(&quot;y&quot;));</span>
+<span class="fc" id="L73">            w = ((Double) group.get(&quot;w&quot;));</span>
+<span class="fc" id="L74">            h = ((Double) group.get(&quot;h&quot;));</span>
+<span class="fc" id="L75">            Entity flag = new Flag(x, y, w, h);</span>
+<span class="fc" id="L76">            entities.add(flag);</span>
+        }
+<span class="fc" id="L78">    }</span>
+
+    @Override
+    protected void buildTrees() {
+<span class="fc" id="L82">        JSONArray trees = (JSONArray)configuration.get(&quot;trees&quot;);</span>
+
+        double x;
+        double y;
+        double w;
+        double h;
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        for (int i = 0; i &lt; trees.size(); i++) {</span>
+<span class="fc" id="L89">            JSONObject group = (JSONObject) trees.get(i);</span>
+<span class="fc" id="L90">            x = ((Double) group.get(&quot;x&quot;));</span>
+<span class="fc" id="L91">            y = ((Double) group.get(&quot;y&quot;));</span>
+<span class="fc" id="L92">            w = ((Double) group.get(&quot;w&quot;));</span>
+<span class="fc" id="L93">            h = ((Double) group.get(&quot;h&quot;));</span>
+<span class="fc" id="L94">            Entity tree = new Tree(x, y, w, h);</span>
+<span class="fc" id="L95">            entities.add(tree);</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+    @Override
+    protected void buildSlimes() {
+<span class="fc" id="L101">        JSONArray slimes = (JSONArray)configuration.get(&quot;slimes&quot;);</span>
+
+        double x;
+        double y;
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        for (int i = 0; i &lt; slimes.size(); i++) {</span>
+<span class="fc" id="L106">            JSONObject group = (JSONObject) slimes.get(i);</span>
+<span class="fc" id="L107">            x = ((Double) group.get(&quot;x&quot;));</span>
+<span class="fc" id="L108">            y = ((Double) group.get(&quot;y&quot;));</span>
+<span class="fc" id="L109">            Entity slime = new Slime(x, y, randomColourSelector());</span>
+<span class="fc" id="L110">            entities.add(slime);</span>
+        }
+<span class="fc" id="L112">    }</span>
+
+    // Helper for buildSlimes() to choose slime colour.
+    private Slime.Colour randomColourSelector() {
+<span class="fc" id="L116">        Random ran = new Random();</span>
+<span class="fc" id="L117">        int choice = ran.nextInt(5);</span>
+<span class="fc bfc" id="L118" title="All 5 branches covered.">        switch (choice) {</span>
+            case 0:
+<span class="fc" id="L120">                return Slime.Colour.BLUE;</span>
+            case 1:
+<span class="fc" id="L122">                return Slime.Colour.GREEN;</span>
+            case 2:
+<span class="fc" id="L124">                return Slime.Colour.PURPLE;</span>
+            case 3:
+<span class="fc" id="L126">                return Slime.Colour.RED;</span>
+            default:
+<span class="fc" id="L128">                return Slime.Colour.YELLOW;</span>
+        }
+    }
+
+    @Override
+    protected void buildHero() {
+
+<span class="fc" id="L135">        JSONObject hero_obj = (JSONObject)configuration.get(&quot;hero&quot;);</span>
+<span class="fc" id="L136">        double x = ((Double)hero_obj.get(&quot;x&quot;));</span>
+<span class="fc" id="L137">        double y = ((Double)hero_obj.get(&quot;y&quot;));</span>
+<span class="fc" id="L138">        boolean isSmall = ((Boolean)hero_obj.get(&quot;small&quot;));</span>
+<span class="fc" id="L139">        hero = new Hero(x, y, HeroPathStateContext.Actor.DEFAULT);</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (isSmall) {</span>
+<span class="fc" id="L141">            hero.setWidth(20);</span>
+<span class="fc" id="L142">            hero.setHeight(34);</span>
+        } else {
+<span class="nc" id="L144">            hero.setWidth(30);</span>
+<span class="nc" id="L145">            hero.setHeight(51);</span>
+        }
+<span class="fc" id="L147">        entities.add(hero);</span>
+<span class="fc" id="L148">    }</span>
+
+    @Override
+    protected void buildFloor() {
+<span class="fc" id="L152">        FloorTileFactory tileFactory = new DefaultFloorTileFactory();</span>
+<span class="fc" id="L153">        JSONObject floors = (JSONObject)configuration.get(&quot;floor&quot;);</span>
+        JSONArray design;
+
+<span class="fc" id="L156">        design = (JSONArray)floors.get(&quot;dirt&quot;);</span>
+<span class="fc" id="L157">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.DIRT);</span>
+
+<span class="fc" id="L159">        design = (JSONArray)floors.get(&quot;top&quot;);</span>
+<span class="fc" id="L160">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.TOP);</span>
+
+<span class="fc" id="L162">        design = (JSONArray)floors.get(&quot;left&quot;);</span>
+<span class="fc" id="L163">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.LEFT);</span>
+
+<span class="fc" id="L165">        design = (JSONArray)floors.get(&quot;right&quot;);</span>
+<span class="fc" id="L166">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.RIGHT);</span>
+
+<span class="fc" id="L168">        design = (JSONArray)floors.get(&quot;left_cnr&quot;);</span>
+<span class="fc" id="L169">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.LEFT_CORNER);</span>
+
+<span class="fc" id="L171">        design = (JSONArray)floors.get(&quot;right_cnr&quot;);</span>
+<span class="fc" id="L172">        floorBuilderHelper(design, tileFactory, FloorTileFactory.Path.RIGHT_CORNER);</span>
+
+
+
+<span class="fc" id="L176">    }</span>
+
+    private void floorBuilderHelper(JSONArray groups, FloorTileFactory tileFactory, FloorTileFactory.Path type) {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        for (int i = 0; i &lt; groups.size(); i++) {</span>
+<span class="fc" id="L180">            JSONObject group = (JSONObject) groups.get(i);</span>
+<span class="fc" id="L181">            boolean asRow = ((Boolean)group.get(&quot;x_axis&quot;));</span>
+<span class="fc" id="L182">            double from = ((Double) group.get(&quot;from&quot;));</span>
+<span class="fc" id="L183">            double to = ((Double) group.get(&quot;to&quot;));</span>
+<span class="fc" id="L184">            int qty = ((Long) group.get(&quot;qty&quot;)).intValue();</span>
+<span class="fc" id="L185">            double pos = ((Double) group.get(&quot;pos&quot;));</span>
+<span class="fc" id="L186">            double stretch = (to - from) / qty;</span>
+            Entity tile;
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (asRow) {</span>
+<span class="fc" id="L189">                tile = tileFactory.createFloorTile(type, from, pos, stretch, 50);</span>
+<span class="fc" id="L190">                buildRow(tile, qty);</span>
+            }else {
+<span class="fc" id="L192">                tile = tileFactory.createFloorTile(type, pos, from, 50, stretch);</span>
+<span class="fc" id="L193">                buildColumn(tile, qty);</span>
+            }
+        }
+<span class="fc" id="L196">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

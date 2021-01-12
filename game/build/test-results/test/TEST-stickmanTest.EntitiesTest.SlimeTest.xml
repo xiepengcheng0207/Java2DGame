@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickmanTest.EntitiesTest.SlimeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-11-16T06:08:20" hostname="pengchengdeMacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="getImagePathTest" classname="stickmanTest.EntitiesTest.SlimeTest" time="0.0"/>
+  <testcase name="newInstanceTest" classname="stickmanTest.EntitiesTest.SlimeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

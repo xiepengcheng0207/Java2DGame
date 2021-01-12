@@ -1,0 +1,41 @@
+stickmanTest/EntitiesTest/SlimeTest.java
+ stickmanTest.EntitiesTest.SlimeTest
+stickmanTest/EntitiesTest/TreeTest.java
+ stickmanTest.EntitiesTest.TreeTest
+stickmanTest/EntitiesTest/YouWinBannerTest.java
+ stickmanTest.EntitiesTest.YouWinBannerTest
+stickmanTest/levelsTest/LevelTest.java
+ stickmanTest.levelsTest.LevelTest
+stickmanTest/EntitiesTest/HeroPathStateTest/StandStateTest.java
+ stickmanTest.EntitiesTest.HeroPathStateTest.StandStateTest
+stickmanTest/EntitiesTest/HeroPathStateTest/HeroPathStateContextTest.java
+ stickmanTest.EntitiesTest.HeroPathStateTest.HeroPathStateContextTest
+stickmanTest/levelsTest/SomeMethodLevelImpTest.java
+ stickmanTest.levelsTest.SomeMethodLevelImpTest
+stickmanTest/EntitiesTest/FlagTest.java
+ stickmanTest.EntitiesTest.FlagTest
+stickmanTest/EntitiesTest/MushroomTest.java
+ stickmanTest.EntitiesTest.MushroomTest
+stickmanTest/EntitiesTest/HeroPathStateTest/WalkLeftStateTest.java
+ stickmanTest.EntitiesTest.HeroPathStateTest.WalkLeftStateTest
+stickmanTest/EntitiesTest/PlatformTest.java
+ stickmanTest.EntitiesTest.PlatformTest
+stickmanTest/AppTest.java
+ stickmanTest.AppTest
+stickmanTest/EntitiesTest/HeroTest.java
+ stickmanTest.EntitiesTest.HeroTest
+stickmanTest/EntitiesTest/HeroPathStateTest/WalkRightStateTest.java
+ stickmanTest.EntitiesTest.HeroPathStateTest.WalkRightStateTest
+stickmanTest/EntitiesTest/FloorTileFactoryTest.java
+ stickmanTest.EntitiesTest.FloorTileFactoryTest.FloorTileFactoryTest
+stickmanTest/EntitiesTest/GhostTest.java
+ stickmanTest.EntitiesTest.GhostTest
+stickmanTest/viewTest/GameWindowTest.java
+ stickmanTest.viewTest.GameWindowTest
+stickmanTest/EntitiesTest/BulletTestAndEntityTest.java
+ stickmanTest.EntitiesTest.BulletTestAndEntityTest
+ stickmanTest.EntitiesTest.BulletTestAndEntityTest$testLayer
+stickmanTest/viewTest/BlockedBackgroundTest.java
+ stickmanTest.viewTest.BlockedBackgroundTest
+stickmanTest/modelTest/GameEngineImpTest.java
+ stickmanTest.modelTest.GameEngineImpTest

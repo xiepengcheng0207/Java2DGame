@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultFloorTileFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.Entities.FloorTileFactory</a> &gt; <span class="el_source">DefaultFloorTileFactory.java</span></div><h1>DefaultFloorTileFactory.java</h1><pre class="source lang-java linenums">package stickman.Entities.FloorTileFactory;
+
+import stickman.Entities.Entity;
+
+<span class="fc" id="L5">public class DefaultFloorTileFactory extends FloorTileFactory {</span>
+
+
+    @Override
+    public Entity createFloorTile(Path path, double xPos, double yPos, double width, double height) {
+<span class="pc bpc" id="L10" title="1 of 7 branches missed.">        switch (path) {</span>
+            case TOP:
+<span class="fc" id="L12">                return new DefaultTopFloorTile(xPos, yPos, width, height);</span>
+            case DIRT:
+<span class="fc" id="L14">                return new DefaultDirtFloorTile(xPos, yPos, width, height);</span>
+            case LEFT:
+<span class="fc" id="L16">                return new DefaultLeftFloorTile(xPos, yPos, width, height);</span>
+            case RIGHT:
+<span class="fc" id="L18">                return new DefaultRightFloorTile(xPos, yPos, width, height);</span>
+            case LEFT_CORNER:
+<span class="fc" id="L20">                return new DefaultLeftCornerFloorTile(xPos, yPos, width, height);</span>
+            case RIGHT_CORNER:
+<span class="fc" id="L22">                return new DefaultRightCornerFloorTile(xPos, yPos, width, height);</span>
+
+            default: // Will never happen.
+<span class="nc" id="L25">                return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

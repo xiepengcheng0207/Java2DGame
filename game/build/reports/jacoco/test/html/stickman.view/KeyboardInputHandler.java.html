@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyboardInputHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.view</a> &gt; <span class="el_source">KeyboardInputHandler.java</span></div><h1>KeyboardInputHandler.java</h1><pre class="source lang-java linenums">package stickman.view;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import stickman.model.GameEngine;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+class KeyboardInputHandler{
+    private final GameEngine model;
+<span class="fc" id="L16">    private boolean left = false;</span>
+<span class="fc" id="L17">    private boolean right = false;</span>
+<span class="fc" id="L18">    private boolean shoot = false;</span>
+<span class="fc" id="L19">    private Set&lt;KeyCode&gt; pressedKeys = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L20">    private Map&lt;String, MediaPlayer&gt; sounds = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L22">    KeyboardInputHandler(GameEngine model) {</span>
+<span class="fc" id="L23">        this.model = model;</span>
+
+<span class="fc" id="L25">        URL mediaUrl = getClass().getResource(&quot;/jump.wav&quot;);</span>
+<span class="fc" id="L26">        String jumpURL = mediaUrl.toExternalForm();</span>
+<span class="fc" id="L27">        Media jumpSound = new Media(jumpURL);</span>
+<span class="fc" id="L28">        MediaPlayer jumpMediaPlayer = new MediaPlayer(jumpSound);</span>
+<span class="fc" id="L29">        sounds.put(&quot;jump&quot;, jumpMediaPlayer);</span>
+
+<span class="fc" id="L31">        mediaUrl = getClass().getResource(&quot;/shoot.wav&quot;);</span>
+<span class="fc" id="L32">        String shootURL = mediaUrl.toExternalForm();</span>
+<span class="fc" id="L33">        Media shootSound = new Media(shootURL);</span>
+<span class="fc" id="L34">        MediaPlayer shootMediaPlayer = new MediaPlayer(shootSound);</span>
+<span class="fc" id="L35">        sounds.put(&quot;shoot&quot;, shootMediaPlayer);</span>
+<span class="fc" id="L36">    }</span>
+
+    void handlePressed(KeyEvent keyEvent) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (pressedKeys.contains(keyEvent.getCode())) {</span>
+<span class="nc" id="L40">            return;</span>
+        }
+<span class="nc" id="L42">        pressedKeys.add(keyEvent.getCode());</span>
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (model.getCurrentLevel().levelWon())</span>
+<span class="nc" id="L46">                model.startLevel();</span>
+        }
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (keyEvent.getCode().equals(KeyCode.UP)) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            if (model.jump()) {</span>
+<span class="nc" id="L51">                MediaPlayer jumpPlayer = sounds.get(&quot;jump&quot;);</span>
+<span class="nc" id="L52">                jumpPlayer.stop();</span>
+<span class="nc" id="L53">                jumpPlayer.play();</span>
+            }
+        }
+
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (keyEvent.getCode().equals(KeyCode.LEFT)) {</span>
+<span class="nc" id="L58">            left = true;</span>
+        }
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        else if (keyEvent.getCode().equals(KeyCode.RIGHT)) {</span>
+<span class="nc" id="L61">            right = true;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        } else if (keyEvent.getCode().equals(KeyCode.SPACE)) {</span>
+<span class="nc bnc" id="L63" title="All 8 branches missed.">            if ((left || right) &amp;&amp; !(left &amp;&amp; right)) {</span>
+<span class="nc" id="L64">                shoot = true;</span>
+            }
+        } else {
+<span class="nc" id="L67">            return;</span>
+        }
+
+        // Stop moving
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        if (left &amp;&amp; right) {</span>
+<span class="nc" id="L72">            model.stopMoving();</span>
+<span class="nc" id="L73">            return;</span>
+        }
+
+        // Move
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (left)</span>
+<span class="nc" id="L78">            model.moveLeft();</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (right)</span>
+<span class="nc" id="L80">            model.moveRight();</span>
+
+        // shoot
+<span class="nc bnc" id="L83" title="All 6 branches missed.">        if ((left || right) &amp;&amp; shoot) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (model.getCurrentLevel().shoot()) {</span>
+<span class="nc" id="L85">                MediaPlayer jumpPlayer = sounds.get(&quot;shoot&quot;);</span>
+<span class="nc" id="L86">                jumpPlayer.stop();</span>
+<span class="nc" id="L87">                jumpPlayer.play();</span>
+            }
+<span class="nc" id="L89">            shoot = false;</span>
+        }
+<span class="nc" id="L91">    }</span>
+    void handleReleased(KeyEvent keyEvent) {
+<span class="nc" id="L93">        pressedKeys.remove(keyEvent.getCode());</span>
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (keyEvent.getCode().equals(KeyCode.LEFT)) {</span>
+<span class="nc" id="L96">            left = false;</span>
+        }
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        else if (keyEvent.getCode().equals(KeyCode.RIGHT)) {</span>
+<span class="nc" id="L99">            right = false;</span>
+        } else {
+<span class="nc" id="L101">            return;</span>
+        }
+
+<span class="nc bnc" id="L104" title="All 4 branches missed.">        if (!(right || left)) {</span>
+<span class="nc" id="L105">            model.stopMoving();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        } else if (right) {</span>
+<span class="nc" id="L107">            model.moveRight();</span>
+        } else {
+<span class="nc" id="L109">            model.moveLeft();</span>
+        }
+<span class="nc" id="L111">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

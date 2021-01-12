@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LevelImp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman.levels</a> &gt; <span class="el_source">LevelImp.java</span></div><h1>LevelImp.java</h1><pre class="source lang-java linenums">package stickman.levels;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import stickman.Entities.*;
+import stickman.view.BackgroundDrawer;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LevelImp implements Level {
+
+    private List&lt;Entity&gt; entities;
+    private Entity hero;
+    private BackgroundDrawer bg_drawer;
+<span class="fc" id="L16">    private boolean left = false;</span>
+<span class="fc" id="L17">    private boolean right = false;</span>
+<span class="fc" id="L18">    private final double gravity = 0.1;</span>
+<span class="fc" id="L19">    private boolean heroHasGrown = false;</span>
+<span class="fc" id="L20">    private boolean levelLost = false;</span>
+<span class="fc" id="L21">    private  boolean levelWon = false;</span>
+<span class="fc" id="L22">    private boolean heroCanShoot = false;</span>
+<span class="fc" id="L23">    private int jumpCount = 0;</span>
+
+<span class="fc" id="L25">    public LevelImp(List&lt;Entity&gt; entities, Entity hero, BackgroundDrawer bg_drawer) {</span>
+<span class="fc" id="L26">        this.entities = entities;</span>
+<span class="fc" id="L27">        this.hero = hero;</span>
+<span class="fc" id="L28">        this.bg_drawer = bg_drawer;</span>
+<span class="fc" id="L29">    }</span>
+
+    @Override
+    public List&lt;Entity&gt; getEntities() {
+<span class="fc" id="L33">        return entities;</span>
+    }
+
+    @Override
+    public BackgroundDrawer getBGDrawer() {
+<span class="fc" id="L38">        return this.bg_drawer;</span>
+    }
+
+    @Override
+    public double getHeight() {
+<span class="nc" id="L43">        return 0;</span>
+    }
+
+    //@Override
+    public double getWidth() {
+<span class="nc" id="L48">        return 0;</span>
+    }
+
+    @Override
+    public void tick() {
+
+<span class="pc bpc" id="L54" title="2 of 4 branches missed.">        if (levelLost || levelWon) return;</span>
+
+        // apply gravity to all objects with velocity.
+<span class="fc" id="L57">        applyGravity();</span>
+
+        // Set Hero's direction.
+<span class="fc" id="L60">        updateEntitiesPosition();</span>
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (Entity ent_a : getMovingEntities()) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            for (Entity ent_b : entities) {</span>
+
+                // Perform actions based on which Entities intersect each other.
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                if (ent_a.intersects(ent_b)) {</span>
+
+                    // Certain Entity interactions have consequences.
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">                    if (heroIntersectsWithSlime(ent_a, ent_b) ||</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                        heroIntersectsWithMushroom(ent_a, ent_b) ||</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                        heroHasFallen() ||</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                        bulletIntersectsWithSlime(ent_a, ent_b) ||</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">                        heroIntersectsWithFlag(ent_a, ent_b) ||</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">                        intersectionRequiresNoAction(ent_a, ent_b))</span>
+<span class="fc" id="L75">                        continue;</span>
+
+                    // Calculate the left and right overlap of the Entity's from both directions.
+                    // The smallest overlap is assumed to be the direction of travel.
+                    boolean from_left;
+                    boolean from_top;
+<span class="fc" id="L81">                    double x_overlap = 0;</span>
+<span class="fc" id="L82">                    double y_overlap = 0;</span>
+
+                    // X-axis overlap.
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                    if (ent_a.getXPos() &lt; ent_b.getXPos()) {</span>
+<span class="fc" id="L86">                        x_overlap = Math.abs(ent_a.getXPos() + ent_a.getWidth() - ent_b.getXPos());</span>
+<span class="fc" id="L87">                        from_left = true;</span>
+                    } else {
+<span class="fc" id="L89">                        x_overlap = Math.abs(ent_b.getXPos() + ent_b.getWidth() - ent_a.getXPos());</span>
+<span class="fc" id="L90">                        from_left = false;</span>
+                    }
+
+                    // Y-axis overlap.
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                    if (ent_a.getYPos() &lt; ent_b.getYPos()) {</span>
+<span class="fc" id="L95">                        y_overlap = Math.abs(ent_a.getYPos() + ent_a.getHeight() - ent_b.getYPos());</span>
+<span class="fc" id="L96">                        from_top = true;</span>
+                    } else {
+<span class="fc" id="L98">                        y_overlap = Math.abs(ent_b.getYPos() + ent_b.getHeight() - ent_a.getYPos());</span>
+<span class="fc" id="L99">                        from_top = false;</span>
+                    }
+
+
+                    // Direction of travel is on the x-axis.
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                    if (x_overlap &lt; y_overlap) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">                        if (from_left)</span>
+<span class="fc" id="L106">                            ent_a.setXPos(ent_b.getXPos() - ent_a.getWidth());</span>
+
+                        // From right
+                        else
+<span class="fc" id="L110">                            ent_a.setXPos(ent_b.getXPos() + ent_b.getWidth());</span>
+
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                        if (ent_a != hero)</span>
+<span class="fc" id="L113">                            ent_a.setXVel(ent_a.getXVel() * -1);</span>
+
+                    // Direction of travel is on the y-axis.
+                    } else {
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                        if (from_top) {</span>
+<span class="fc" id="L118">                            ent_a.setYPos(ent_b.getYPos() - ent_a.getHeight());</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                            if (ent_a == hero) jumpCount = 0; // Allow the hero to jump again.</span>
+                        }
+
+                        // From bottom
+                        else
+<span class="nc" id="L124">                            ent_a.setYPos(ent_b.getYPos() + ent_b.getHeight());</span>
+
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">                        if (ent_a.getClass() == Bullet.class)</span>
+<span class="nc" id="L127">                            ent_a.setYVel(ent_a.getYVel() * -1);</span>
+                        else
+<span class="fc" id="L129">                            ent_a.setYVel(0);</span>
+
+                    }
+                }
+<span class="fc" id="L133">            }</span>
+<span class="fc" id="L134">        }</span>
+<span class="fc" id="L135">    }</span>
+
+    private boolean intersectionRequiresNoAction(Entity a, Entity b) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if  ((a.getClass() == b.getClass()) ||</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">             (a.getClass() == Mushroom.class) ||</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">             (b.getClass() == Mushroom.class) ||</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">             (a.getClass() == Ghost.class) ||</span>
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">             (b.getClass() == Ghost.class) ||</span>
+<span class="pc bpc" id="L143" title="2 of 4 branches missed.">             (a == hero &amp;&amp; b.getClass() == Bullet.class) ||</span>
+<span class="pc bnc" id="L144" title="All 2 branches missed.">             (b == hero &amp;&amp; a.getClass() == Bullet.class) ||</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">             (a.getClass() == Flag.class) ||</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">             (b.getClass() == Flag.class))</span>
+<span class="fc" id="L147">            return true;</span>
+        else
+<span class="fc" id="L149">            return false;</span>
+    }
+
+    private boolean heroIntersectsWithMushroom(Entity a, Entity b) {
+<span class="pc bpc" id="L153" title="3 of 4 branches missed.">        if ((a.getClass() == Mushroom.class &amp;&amp; b == hero) ||</span>
+<span class="pc bpc" id="L154" title="1 of 4 branches missed.">            (b.getClass() == Mushroom.class &amp;&amp; a == hero)) {</span>
+
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (!heroCanShoot)</span>
+<span class="nc" id="L157">                heroCanShoot = true;</span>
+
+            // Delete the mushroom
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (a.getClass() == Mushroom.class)</span>
+<span class="nc" id="L161">                entities.remove(a);</span>
+            else
+<span class="nc" id="L163">                entities.remove(b);</span>
+
+<span class="nc" id="L165">            return true;</span>
+        }
+<span class="fc" id="L167">        return false;</span>
+    }
+
+    private boolean heroHasFallen() {
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if (hero.getYPos() &gt; 500) {</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            for (Entity ent: getMovingEntities ()) {</span>
+<span class="nc" id="L173">                ent.setXVel(0);</span>
+<span class="nc" id="L174">                ent.setYVel(0);</span>
+<span class="nc" id="L175">            }</span>
+
+<span class="nc" id="L177">            entities.remove(hero);</span>
+<span class="nc" id="L178">            levelLost = true;</span>
+<span class="nc" id="L179">            return true;</span>
+        }
+<span class="fc" id="L181">        return false;</span>
+    }
+
+    private boolean heroIntersectsWithSlime(Entity a, Entity b) {
+<span class="pc bpc" id="L185" title="1 of 4 branches missed.">        if ((a == hero &amp;&amp; b.getClass() == Slime.class) ||</span>
+<span class="pc bpc" id="L186" title="1 of 4 branches missed.">            (a.getClass() == Slime.class &amp;&amp; b == hero)) {</span>
+
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            for (Entity ent: getMovingEntities ()) {</span>
+<span class="nc" id="L189">                ent.setXVel(0);</span>
+<span class="nc" id="L190">                ent.setYVel(0);</span>
+<span class="nc" id="L191">            }</span>
+
+<span class="nc" id="L193">            entities.remove(hero);</span>
+<span class="nc" id="L194">            levelLost = true;</span>
+<span class="nc" id="L195">            return true;</span>
+        }
+<span class="fc" id="L197">        return false;</span>
+    }
+
+    private boolean bulletIntersectsWithSlime(Entity a, Entity b) {
+<span class="pc bpc" id="L201" title="3 of 4 branches missed.">        if ((a.getClass() == Bullet.class &amp;&amp; b.getClass() == Slime.class) ||</span>
+<span class="pc bpc" id="L202" title="3 of 4 branches missed.">            (b.getClass() == Bullet.class &amp;&amp; a.getClass() == Slime.class)) {</span>
+
+            Entity ghost;
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (a.getClass() == Slime.class)</span>
+<span class="nc" id="L206">                ghost = new Ghost(a.getXPos(), a.getYPos());</span>
+            else
+<span class="nc" id="L208">                ghost = new Ghost(b.getXPos(), b.getYPos());;</span>
+
+<span class="nc" id="L210">            entities.remove(a);</span>
+<span class="nc" id="L211">            entities.remove(b);</span>
+<span class="nc" id="L212">            entities.add(ghost);</span>
+
+<span class="nc" id="L214">            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(17),</span>
+<span class="nc" id="L215">                    t -&gt; {ghost.setYPos(ghost.getYPos() - 3);}));</span>
+
+<span class="nc" id="L217">            timeline.setCycleCount(10000);</span>
+<span class="nc" id="L218">            timeline.play();</span>
+<span class="nc" id="L219">            return true;</span>
+        }
+<span class="fc" id="L221">        return false;</span>
+    }
+
+    private boolean heroIntersectsWithFlag(Entity a, Entity b) {
+<span class="pc bpc" id="L225" title="1 of 4 branches missed.">        if ((a == hero &amp;&amp; b.getClass() == Flag.class) ||</span>
+<span class="pc bpc" id="L226" title="3 of 4 branches missed.">            (a.getClass() == Flag.class &amp;&amp; b == hero)) {</span>
+
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            for (Entity ent: getMovingEntities()) {</span>
+<span class="nc" id="L229">                ent.setXVel(0);</span>
+<span class="nc" id="L230">                ent.setYVel(0);</span>
+<span class="nc" id="L231">            }</span>
+
+<span class="nc" id="L233">            levelWon = true;</span>
+
+
+<span class="nc" id="L236">            Entity youWin = new YouWinBanner(hero.getXPos() - 300, -500);</span>
+<span class="nc" id="L237">            entities.add(youWin);</span>
+<span class="nc" id="L238">            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(17),</span>
+<span class="nc" id="L239">                    t -&gt; {youWin.setYPos(youWin.getYPos() + 2);}));</span>
+
+<span class="nc" id="L241">            timeline.setCycleCount(110);</span>
+<span class="nc" id="L242">            timeline.play();</span>
+
+<span class="nc" id="L244">            return true;</span>
+        }
+<span class="fc" id="L246">        return false;</span>
+    }
+
+    private List&lt;Entity&gt; getMovingEntities() {
+<span class="fc" id="L250">        List&lt;Entity&gt; moving_ents = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        for (Entity ent: entities) {</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">            if (ent == hero) continue; // put hero in last.</span>
+<span class="pc bpc" id="L253" title="1 of 4 branches missed.">            if (ent.getXVel() != 0 || ent.getYVel() != 0) {</span>
+<span class="fc" id="L254">                moving_ents.add(ent);</span>
+            }
+<span class="fc" id="L256">        }</span>
+
+        // This is to prevent the hero being pushed into walls etc.
+        // The hero is the last to be corrected.
+<span class="fc" id="L260">        moving_ents.add(hero);</span>
+<span class="fc" id="L261">        return moving_ents;</span>
+    }
+
+    private void updateEntitiesPosition() {
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (left)</span>
+<span class="nc" id="L266">            hero.setXPos(hero.getXPos() - hero.getXVel());</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">        if (right)</span>
+<span class="nc" id="L268">            hero.setXPos(hero.getXPos() + hero.getXVel());</span>
+<span class="fc" id="L269">        hero.setYPos(hero.getYPos() + hero.getYVel());</span>
+
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        for (Entity ent : getMovingEntities()) {</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">            if (ent == hero) continue;</span>
+<span class="fc" id="L273">            ent.setXPos(ent.getXPos() + ent.getXVel());</span>
+
+            // Bullet's are not controlled by gravity, but independently.
+            // Need to update the Bullet's y-axis too.
+            // Delete the bullet if it has travelled far away.
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">            if (ent.getClass() == Bullet.class) {</span>
+<span class="nc" id="L279">                ent.setYPos(ent.getYPos() + ent.getYVel());</span>
+<span class="nc" id="L280">                double x_travel = Math.abs(hero.getXPos() - ent.getXPos());</span>
+<span class="nc" id="L281">                double y_travel = Math.abs(hero.getYPos() - ent.getYPos());</span>
+<span class="nc bnc" id="L282" title="All 4 branches missed.">                if (x_travel &gt; 1000 || y_travel &gt; 1000)</span>
+<span class="nc" id="L283">                    entities.remove(ent);</span>
+            }
+<span class="fc" id="L285">        }</span>
+<span class="fc" id="L286">    }</span>
+
+    private void applyGravity() {
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        for (Entity ent : entities) {</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">            if (ent.getClass() == Bullet.class) continue; // bullets not effected by gravity.</span>
+<span class="pc bpc" id="L291" title="1 of 4 branches missed.">            if (!(ent.getXVel() == 0) || !(ent.getYVel() == 0)) {</span>
+<span class="fc" id="L292">                ent.setYVel(ent.getYVel() + gravity);</span>
+<span class="fc" id="L293">                ent.setYPos(ent.getYPos() + ent.getYVel());</span>
+            }
+<span class="fc" id="L295">        }</span>
+<span class="fc" id="L296">    }</span>
+
+    @Override
+    public double getFloorHeight() {
+<span class="fc" id="L300">        return 300;</span>
+    }
+
+    @Override
+    public double getHeroX() {
+<span class="fc" id="L305">        return hero.getXPos();</span>
+    }
+
+    @Override
+    public double getHeroY() {
+<span class="fc" id="L310">        return hero.getYPos();</span>
+    }
+
+    @Override
+    public void setHeroX(double xPos) {
+<span class="nc" id="L315">        hero.setXPos(xPos);</span>
+<span class="nc" id="L316">    }</span>
+
+    @Override
+    public boolean jump() {
+<span class="pc bpc" id="L320" title="2 of 4 branches missed.">        if (levelWon || levelLost)</span>
+<span class="nc" id="L321">            return false;</span>
+
+        // Can only jump twice before landing again.
+        // Jump count is reset to 0 within tick() if the hero intersects
+        // another entity from the top.
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">        if (jumpCount &lt; 2) {</span>
+<span class="fc" id="L327">            jumpCount += 1;</span>
+<span class="fc" id="L328">            hero.setYVel(-3);</span>
+<span class="fc" id="L329">            return true;</span>
+        }
+<span class="nc" id="L331">        return false;</span>
+    }
+
+    @Override
+    public boolean shoot() {
+<span class="nc bnc" id="L336" title="All 6 branches missed.">        if (levelLost || levelWon || !heroCanShoot)</span>
+<span class="nc" id="L337">            return false;</span>
+
+<span class="nc" id="L339">        Entity bullet = new Bullet(hero.getXPos(), hero.getYPos());</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">        if (left)</span>
+<span class="nc" id="L341">            bullet.setXVel(Math.abs(bullet.getXVel()) * -1);</span>
+<span class="nc" id="L342">        entities.add(bullet);</span>
+<span class="nc" id="L343">        return true;</span>
+    }
+
+    @Override
+    public boolean moveLeft() {
+<span class="fc" id="L348">        right = false;</span>
+<span class="fc" id="L349">        left = true;</span>
+<span class="fc" id="L350">        return true;</span>
+    }
+
+    @Override
+    public boolean moveRight() {
+<span class="fc" id="L355">        right = true;</span>
+<span class="fc" id="L356">        left = false;</span>
+<span class="fc" id="L357">        return true;</span>
+    }
+
+    @Override
+    public boolean stopMoving() {
+<span class="fc" id="L362">        right = false;</span>
+<span class="fc" id="L363">        left = false;</span>
+<span class="fc" id="L364">        return true;</span>
+    }
+
+    @Override
+    public boolean levelLost() {
+<span class="fc" id="L369">        return levelLost;</span>
+    }
+
+    @Override
+    public boolean levelWon() {
+<span class="nc" id="L374">        return levelWon;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

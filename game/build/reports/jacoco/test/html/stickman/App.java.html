@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Codebase_B</a> &gt; <a href="index.source.html" class="el_package">stickman</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package stickman;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import stickman.model.GameEngine;
+import stickman.model.GameEngineImpl;
+import stickman.view.GameWindow;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+<span class="fc" id="L17">public class App extends Application {</span>
+
+    public static void main(String[] args) {
+<span class="fc" id="L20">        launch(args);</span>
+<span class="fc" id="L21">    }</span>
+
+    @Override
+    public void start(Stage primaryStage) {
+<span class="fc" id="L25">        Map&lt;String, String&gt; params = getParameters().getNamed();</span>
+
+<span class="fc" id="L27">        String s = &quot;Java 11 sanity check&quot;;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (s.isBlank()) {</span>
+<span class="nc" id="L29">            throw new IllegalStateException(&quot;You must be running Java 11+. You won't ever see this exception though&quot; +</span>
+                    &quot; as your code will fail to compile on Java 10 and below.&quot;);
+        }
+
+<span class="fc" id="L33">        GameEngine model = new GameEngineImpl(loadConfigurationFile());</span>
+<span class="fc" id="L34">        GameWindow window = new GameWindow(model, 640, 400);</span>
+<span class="fc" id="L35">        window.run();</span>
+
+<span class="fc" id="L37">        primaryStage.setTitle(&quot;Stickman&quot;);</span>
+<span class="fc" id="L38">        primaryStage.setScene(window.getScene());</span>
+<span class="fc" id="L39">        primaryStage.show();</span>
+
+<span class="fc" id="L41">        window.run();</span>
+<span class="fc" id="L42">    }</span>
+
+    private JSONObject loadConfigurationFile() {
+<span class="fc" id="L45">        JSONObject configuration = null;</span>
+<span class="fc" id="L46">        String config = &quot;&quot;;</span>
+<span class="fc" id="L47">        JSONParser parser = new JSONParser();</span>
+        try {
+<span class="fc" id="L49">            config = Files.readString(Paths.get(&quot;src/main/resources/config.json&quot;));</span>
+<span class="fc" id="L50">            configuration = (JSONObject) parser.parse(config);</span>
+<span class="nc" id="L51">        } catch (ParseException e) {</span>
+<span class="nc" id="L52">            System.out.println(&quot;Invalid or corrupt configuration file.&quot;);</span>
+<span class="nc" id="L53">            System.out.println(e.getMessage());</span>
+<span class="nc" id="L54">        } catch (IOException e) {</span>
+<span class="nc" id="L55">        System.out.println(&quot;Error reading configuration file.&quot;);</span>
+<span class="nc" id="L56">        System.out.println(e.getMessage());</span>
+<span class="pc" id="L57">        }</span>
+
+<span class="fc" id="L59">        return configuration;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
